@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.LruCache;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,7 +20,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * @作者 廖伟健
  * @创建时间 2016/11/24 10:02
- * @描述 ${TODO} 
+ * @描述 ${TODO}
  */
 
 public class ImageLoader {
@@ -146,6 +147,9 @@ public class ImageLoader {
      * @param imageView
      */
     public void loadImage(final String path, final ImageView imageView) {
+        if (mBgHandler == null) {
+            Log.e("zeal", "loadImage: path" + path);
+        }
         //给imageView绑定path，避免错位问题
         imageView.setTag(path);
 
@@ -218,6 +222,9 @@ public class ImageLoader {
             }
         }
         mQueue.add(task);
+        if (mBgHandler == null) {
+            Log.e("zeal", "addTask: " + task);
+        }
         mBgHandler.sendEmptyMessage(0);
     }
 
@@ -260,7 +267,6 @@ public class ImageLoader {
      * @param path
      * @param reqWidth
      * @param reqHeight
-     *
      * @return 返回缩放后的Bitmap
      */
     private Bitmap decodeFileFromResouce(String path, int reqWidth, int reqHeight) {
@@ -286,7 +292,6 @@ public class ImageLoader {
      * @param options
      * @param reqWidth
      * @param reqHeight
-     *
      * @return
      */
     private int calculateInsamepleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -307,7 +312,6 @@ public class ImageLoader {
      * 计算imageview的大小
      *
      * @param imageView
-     *
      * @return
      */
     private ImageSize getImageViewSize(ImageView imageView) {
@@ -322,9 +326,9 @@ public class ImageLoader {
         if (width <= 0) {
             width = lp.width;
         }
-        if (width <= 0) {
-            width = getImageViewFieldValue(imageView, "mMaxWidth");
-        }
+//        if (width <= 0) {
+//            width = getImageViewFieldValue(imageView, "mMaxWidth");
+//        }
         if (width <= 0) {
             width = displayMetrics.widthPixels;
         }
@@ -333,9 +337,9 @@ public class ImageLoader {
         if (height <= 0) {
             height = lp.height;
         }
-        if (height <= 0) {
-            height = getImageViewFieldValue(imageView, "mMaxHeight");
-        }
+//        if (height <= 0) {
+//            height = getImageViewFieldValue(imageView, "mMaxHeight");
+//        }
         if (height <= 0) {
             height = displayMetrics.heightPixels;
         }
@@ -349,7 +353,6 @@ public class ImageLoader {
      *
      * @param imageView
      * @param fieldName
-     *
      * @return
      */
     private int getImageViewFieldValue(ImageView imageView, String fieldName) {
@@ -390,7 +393,7 @@ public class ImageLoader {
     /**
      * 图片的加载策略
      */
-    private enum Type {
+    public enum Type {
         FIFO, FILO;
     }
 

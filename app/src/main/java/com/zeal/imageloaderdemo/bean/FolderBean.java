@@ -14,5 +14,36 @@ public class FolderBean {
 
     private String folderPath;//文件夹的路径
 
+    public String getFolderName() {
+        return folderName;
+    }
+
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public String getFirstFilePath() {
+        return firstFilePath;
+    }
+
+    public void setFirstFilePath(String firstFilePath) {
+        this.firstFilePath = firstFilePath;
+    }
+
+    public String getFolderPath() {
+        return folderPath;
+    }
+
+    public void setFolderPath(String folderPath) {
+        this.folderPath = folderPath;
+        //设置文件夹的名称
+        int dotIndex = folderPath.lastIndexOf("/");
+        this.folderName = folderPath.substring(dotIndex);
+    }
 }
 
