@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     private RecyclerView mRecyclerView;
@@ -177,13 +178,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initLinsteners() {
+        mTvFolderName.setOnClickListener(this);
     }
 
     /**
      * 将数据绑定到view中
      */
     private void data2View() {
-        mTvFolderName.setText(mCurSelectedFolder.getName());
+
 
         mCurFiles = Arrays.asList(mCurSelectedFolder.list(new FilenameFilter() {
             @Override
@@ -197,6 +199,10 @@ public class MainActivity extends AppCompatActivity {
         myAdapter = new MyAdapter(this, mCurSelectedFolder.getAbsolutePath(), mCurFiles);
         mRecyclerView.setAdapter(myAdapter);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
+
+        mTvImgCount.setText(mCurFiles.size()+"张");
+        mTvFolderName.setText(mCurSelectedFolder.getName());
     }
 
     /**
@@ -227,4 +233,13 @@ public class MainActivity extends AppCompatActivity {
         return count;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.id_folder_name:
+
+                break;
+
+        }
+    }
 }

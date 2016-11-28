@@ -5,14 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.zeal.imageloaderdemo.MainActivity">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/id_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+    </android.support.v7.widget.RecyclerView>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dip"
+        android:layout_height="40dip"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:background="#33000000"
-        android:gravity="center_vertical"
+        android:background="#55000000"
         android:orientation="horizontal">
 
         <TextView
@@ -35,10 +38,5 @@
             android:textColor="@android:color/white" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/id_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>
