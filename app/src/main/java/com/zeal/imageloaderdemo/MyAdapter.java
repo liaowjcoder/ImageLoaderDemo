@@ -23,13 +23,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private String mFilePath;
     private Context mContext;
     private List<String> mDatas;
-    private Set<String> mSelectedDatas;
+    /**
+     * 在这里设置静态的原因是在选择不同的文件，需要重新创建adapter，而选中的数据是需要共享的，因此使用static来描述
+     */
+    private static Set<String> mSelectedDatas = new HashSet<>();
 
     public MyAdapter(Context context, String filePath, List<String> datas) {
         this.mContext = context;
         this.mDatas = datas;
         this.mFilePath = filePath;
-        mSelectedDatas = new HashSet<>();
+
     }
 
     @Override
