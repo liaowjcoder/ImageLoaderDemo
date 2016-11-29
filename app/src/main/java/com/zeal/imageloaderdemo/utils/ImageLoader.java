@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.LruCache;
@@ -61,7 +62,7 @@ public class ImageLoader {
      * 默认的线程池数量
      */
     private static int THREAD_POOL_COUNT = 1;
-    private Semaphore mSemaphoreBgHandler = new Semaphore(1);
+    private Semaphore mSemaphoreBgHandler = new Semaphore(0);
     private Semaphore mQueueSemaphore;
 
     /**
@@ -72,7 +73,7 @@ public class ImageLoader {
     private ImageLoader(int threadCount, Type type) {
 
         //获取可用内存
-        int maxSize = (int) Runtime.getRuntime().freeMemory();
+        int maxSize = (int) Runtime.getRuntime().maxMemory();
         mLruCache = new LruCache<String, Bitmap>(maxSize / 8) {
             @Override
             protected int sizeOf(String key, Bitmap value) {
@@ -101,6 +102,7 @@ public class ImageLoader {
                         mThreadPoolExecutor.execute(getTask());
                     }
                 };
+
                 //释放信号量
                 mSemaphoreBgHandler.release();
                 Looper.loop();
@@ -147,9 +149,6 @@ public class ImageLoader {
      * @param imageView
      */
     public void loadImage(final String path, final ImageView imageView) {
-        if (mBgHandler == null) {
-            Log.e("zeal", "loadImage: path" + path);
-        }
         //给imageView绑定path，避免错位问题
         imageView.setTag(path);
 
@@ -191,12 +190,13 @@ public class ImageLoader {
                     //得到缩放后的bitmap
                     Bitmap bitmap = decodeFileFromResouce(path, imageSize.width, imageSize.height);
 
-                    //将加载出来的bitmap添加到内存缓存中
-                    addBitmapToLruCache(path, bitmap);
+                    if (bitmap != null && !TextUtils.isEmpty(path)) {
+                        //将加载出来的bitmap添加到内存缓存中
+                        addBitmapToLruCache(path, bitmap);
 
-                    //刷新imageview
-                    refreshImageView(bitmap, imageView, path);
-
+                        //刷新imageview
+                        refreshImageView(bitmap, imageView, path);
+                    }
                     //任务执行完毕，释放信号量--当前任务执行完毕了
                     mQueueSemaphore.release();
                 }
@@ -215,6 +215,7 @@ public class ImageLoader {
         //请求一个信号量
         if (mBgHandler == null) {
             try {
+                Log.e("zeal", "acquire: availablePermits:" + mSemaphoreBgHandler.availablePermits());
                 // 请求信号量，防止mPoolThreadHander为null
                 mSemaphoreBgHandler.acquire();//请求一个信号量，没有请求到，则阻塞
             } catch (InterruptedException e) {
@@ -222,9 +223,6 @@ public class ImageLoader {
             }
         }
         mQueue.add(task);
-        if (mBgHandler == null) {
-            Log.e("zeal", "addTask: " + task);
-        }
         mBgHandler.sendEmptyMessage(0);
     }
 
@@ -267,6 +265,7 @@ public class ImageLoader {
      * @param path
      * @param reqWidth
      * @param reqHeight
+     *
      * @return 返回缩放后的Bitmap
      */
     private Bitmap decodeFileFromResouce(String path, int reqWidth, int reqHeight) {
@@ -292,6 +291,7 @@ public class ImageLoader {
      * @param options
      * @param reqWidth
      * @param reqHeight
+     *
      * @return
      */
     private int calculateInsamepleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -312,6 +312,7 @@ public class ImageLoader {
      * 计算imageview的大小
      *
      * @param imageView
+     *
      * @return
      */
     private ImageSize getImageViewSize(ImageView imageView) {
@@ -326,9 +327,9 @@ public class ImageLoader {
         if (width <= 0) {
             width = lp.width;
         }
-//        if (width <= 0) {
-//            width = getImageViewFieldValue(imageView, "mMaxWidth");
-//        }
+        //        if (width <= 0) {
+        //            width = getImageViewFieldValue(imageView, "mMaxWidth");
+        //        }
         if (width <= 0) {
             width = displayMetrics.widthPixels;
         }
@@ -337,9 +338,9 @@ public class ImageLoader {
         if (height <= 0) {
             height = lp.height;
         }
-//        if (height <= 0) {
-//            height = getImageViewFieldValue(imageView, "mMaxHeight");
-//        }
+        //        if (height <= 0) {
+        //            height = getImageViewFieldValue(imageView, "mMaxHeight");
+        //        }
         if (height <= 0) {
             height = displayMetrics.heightPixels;
         }
@@ -353,6 +354,7 @@ public class ImageLoader {
      *
      * @param imageView
      * @param fieldName
+     *
      * @return
      */
     private int getImageViewFieldValue(ImageView imageView, String fieldName) {
@@ -380,6 +382,9 @@ public class ImageLoader {
     private void addBitmapToLruCache(String path, Bitmap bitmap) {
         if (mLruCache.get(path) != null) {
             return;
+        }
+        if (bitmap == null) {
+            Log.e("zeal", "addBitmapToLruCache: " + path);
         }
         mLruCache.put(path, bitmap);
     }
