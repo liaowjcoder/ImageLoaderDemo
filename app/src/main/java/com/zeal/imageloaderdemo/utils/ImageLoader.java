@@ -84,6 +84,10 @@ public class ImageLoader {
         mBgThread = new Thread() {
             @Override
             public void run() {
+
+                //SystemClock.sleep(30000);
+                //这里不能做非常耗时的操作，不然会在主线程中获取信号量时出现阻塞问题
+
                 //轮训线程
                 Looper.prepare();
                 //mBgHandler的作用就相当于在子线程中while(true)，但是handler-looper可以实现这种机制，因此选择使用handler去实现
@@ -102,7 +106,7 @@ public class ImageLoader {
                         mThreadPoolExecutor.execute(getTask());
                     }
                 };
-
+                Log.e("zeal", "释放一个信号量" );
                 //释放信号量
                 mSemaphoreBgHandler.release();
                 Looper.loop();
@@ -215,6 +219,7 @@ public class ImageLoader {
         //请求一个信号量
         if (mBgHandler == null) {
             try {
+                Log.e("zeal", "请求一个信号量" );
                 // 请求信号量，防止mPoolThreadHander为null
                 mSemaphoreBgHandler.acquire();//请求一个信号量，没有请求到，则阻塞
             } catch (InterruptedException e) {

@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mFolders.add(folderBean);
 
 
-                    if (fileCount > mMaxFileCount) {
+                    if (fileCount > mMaxFileCount) {//得到最多少数量文件的文件夹
                         mMaxFileCount = fileCount;
                         mCurSelectedFolder = parentFile;
                     }
@@ -203,51 +203,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //        folder.setFirstFilePath(mAllFils.get(0));
         //        mFolders.add(0, folder);
 
-        mCurFiles = Arrays.asList(mCurSelectedFolder.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                if (filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith("jpeg")
-                        || filename.endsWith(".JPEG") || filename.endsWith(".PNG") || filename.endsWith(".JPG")) {
-                    return checkFileAviable(dir + "/" + filename);
+        if (mCurSelectedFolder != null) {
+            mCurFiles = Arrays.asList(mCurSelectedFolder.list(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String filename) {
+                    if (filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith("jpeg")
+                            || filename.endsWith(".JPEG") || filename.endsWith(".PNG") || filename.endsWith(".JPG")) {
+                        return checkFileAviable(dir + "/" + filename);
+                    }
+                    return false;
                 }
-                return false;
-            }
-        }));
+            }));
 
 
-        myAdapter = new MyAdapter(this, mCurSelectedFolder.getAbsolutePath(), mCurFiles, 6);
-        mRecyclerView.setAdapter(myAdapter);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+            myAdapter = new MyAdapter(this, mCurSelectedFolder.getAbsolutePath(), mCurFiles, 6);
+            mRecyclerView.setAdapter(myAdapter);
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        myAdapter.setOnMyCheckItemClickListener(new MyAdapter.OnMyCheckItemClickListener() {
-            @Override
-            public void click(List<String> mSelectedDatas) {
-                if (mSelectedDatas.size() == 0) {
-                    mTvConfirm.setText("完成");
-                    mTvConfirm.setEnabled(false);
-                } else {
-                    mTvConfirm.setEnabled(true);
-                    mTvConfirm.setText("完成(" + mSelectedDatas.size() + "/6)");
+            myAdapter.setOnMyCheckItemClickListener(new MyAdapter.OnMyCheckItemClickListener() {
+                @Override
+                public void click(List<String> mSelectedDatas) {
+                    if (mSelectedDatas.size() == 0) {
+                        mTvConfirm.setText("完成");
+                        mTvConfirm.setEnabled(false);
+                    } else {
+                        mTvConfirm.setEnabled(true);
+                        mTvConfirm.setText("完成(" + mSelectedDatas.size() + "/6)");
+                    }
+
                 }
+            });
+            /**
+             *
+             */
+            myAdapter.setOnMyImageItemClickListener(new MyAdapter.OnMyImageItemClickListener() {
+                @Override
+                public void click(String filePath) {
+                    Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
+                    ArrayList<String> previewFiles = new ArrayList<String>();
+                    previewFiles.add(filePath);
+                    intent.putStringArrayListExtra(PreviewActivity.PREVIEW_FILES, previewFiles);
+                    startActivity(intent);
+                }
+            });
 
-            }
-        });
-        /**
-         *
-         */
-        myAdapter.setOnMyImageItemClickListener(new MyAdapter.OnMyImageItemClickListener() {
-            @Override
-            public void click(String filePath) {
-                Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
-                ArrayList<String> previewFiles = new ArrayList<String>();
-                previewFiles.add(filePath);
-                intent.putStringArrayListExtra(PreviewActivity.PREVIEW_FILES, previewFiles);
-                startActivity(intent);
-            }
-        });
-
-        mTvImgCount.setText(mCurFiles.size() + "张");
-        mTvFolderName.setText(mCurSelectedFolder.getName());
+            mTvImgCount.setText(mCurFiles.size() + "张");
+            mTvFolderName.setText(mCurSelectedFolder.getName());
+        }
     }
 
     private boolean checkFileAviable(String filePath) {
@@ -264,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 得到该文件夹下有多少符合条件的文件
      *
      * @param parentFile 需要检测
-     *
      * @return
      */
     private int getFileCounts(File parentFile) {

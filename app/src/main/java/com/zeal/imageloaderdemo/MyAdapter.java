@@ -136,4 +136,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             mIbCheck = (ImageButton) itemView.findViewById(R.id.id_item_image_check);
         }
     }
+
+
 }

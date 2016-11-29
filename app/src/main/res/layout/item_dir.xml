@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="10dip"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/dir_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="文件夹的名称" />
+
+    <TextView
+        android:layout_marginTop="10dip"
+        android:id="@+id/dir_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dir_name"
+        android:text="文件夹的路径" />
+
+    <TextView
+        android:id="@+id/file_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="10张" />
+</RelativeLayout>
