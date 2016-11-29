@@ -1,16 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.zeal.imageloaderdemo.MainActivity">
+<RelativeLayout android:id="@+id/activity_main"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.zeal.imageloaderdemo.MainActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/id_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        app:contentInsetStart="0dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dip" android:src="@drawable/back_btn_n"
+            />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_back"
+                android:gravity="center_vertical"
+                android:text="图片选择器"
+                android:textColor="#fff"
+                android:textSize="17sp"
+                android:textStyle="bold"
+            />
+            <TextView
+                android:id="@+id/id_comfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:enabled="false"
+                android:textColor="@color/comfirm_color"
+                android:paddingRight="8dip"
+                android:text="完成"
+                android:textSize="15sp"
+            />
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/id_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/id_toolbar"/>
 
-    </android.support.v7.widget.RecyclerView>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dip"
@@ -21,11 +68,13 @@
         <TextView
             android:id="@+id/id_folder_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dip"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
             android:text="全部文件"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"/>
 
         <TextView
             android:id="@+id/id_image_count"
@@ -35,7 +84,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dip"
             android:text="100张"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"/>
     </RelativeLayout>
 
 

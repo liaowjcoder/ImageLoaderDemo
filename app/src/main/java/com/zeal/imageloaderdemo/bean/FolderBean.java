@@ -18,6 +18,9 @@ public class FolderBean {
         return folderName;
     }
 
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
+    }
 
     public int getCount() {
         return count;
@@ -43,7 +46,7 @@ public class FolderBean {
         this.folderPath = folderPath;
         //设置文件夹的名称
         int dotIndex = folderPath.lastIndexOf("/");
-        this.folderName = folderPath.substring(dotIndex);
+        setFolderName(folderPath.substring(dotIndex));
     }
 }
 

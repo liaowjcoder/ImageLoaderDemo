@@ -215,7 +215,6 @@ public class ImageLoader {
         //请求一个信号量
         if (mBgHandler == null) {
             try {
-                Log.e("zeal", "acquire: availablePermits:" + mSemaphoreBgHandler.availablePermits());
                 // 请求信号量，防止mPoolThreadHander为null
                 mSemaphoreBgHandler.acquire();//请求一个信号量，没有请求到，则阻塞
             } catch (InterruptedException e) {
@@ -273,6 +272,9 @@ public class ImageLoader {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
 
+        if (options.outHeight <= 0 || options.outWidth <= 0) {
+            return null;
+        }
         //计算采样率
         int inSamepleSize = 1;
         inSamepleSize = calculateInsamepleSize(options, reqWidth, reqHeight);
@@ -282,6 +284,9 @@ public class ImageLoader {
         options.inJustDecodeBounds = false;
         options.inSampleSize = inSamepleSize;
         Bitmap bm = BitmapFactory.decodeFile(path, options);
+        if (bm == null) {
+            Log.e("zeal", "decodeFileFromResouce:");
+        }
         return bm;
     }
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="#000">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/preview_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <RelativeLayout
+        android:id="@+id/select_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dip"
+        android:layout_gravity="bottom"
+        android:background="#55000000"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/done_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="完成"
+            android:textSize="15sp"/>
+
+        <CheckBox
+            android:id="@+id/checkbox_select"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="选择"
+            android:textColor="#fff"
+            android:textSize="15sp"/>
+    </RelativeLayout>
+</FrameLayout>

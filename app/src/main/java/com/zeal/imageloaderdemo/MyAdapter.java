@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.zeal.imageloaderdemo.utils.ImageLoader;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by zeal on 16/11/27.
@@ -23,16 +23,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private String mFilePath;
     private Context mContext;
     private List<String> mDatas;
+    private int mMaxSelectImgs = Integer.MAX_VALUE;
     /**
      * 在这里设置静态的原因是在选择不同的文件，需要重新创建adapter，而选中的数据是需要共享的，因此使用static来描述
      */
-    private static Set<String> mSelectedDatas = new HashSet<>();
+    public static List<String> mSelectedDatas = new ArrayList<>();
+    private OnMyCheckItemClickListener onMyCheckItemClickListener;
+    private OnMyImageItemClickListener onMyImageItemClickListener;
 
     public MyAdapter(Context context, String filePath, List<String> datas) {
         this.mContext = context;
         this.mDatas = datas;
         this.mFilePath = filePath;
+    }
 
+    public MyAdapter(Context context, String filePath, List<String> datas, int maxSelectImgs) {
+        this(context, filePath, datas);
+        this.mMaxSelectImgs = maxSelectImgs;
     }
 
     @Override
@@ -48,23 +55,65 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.mIvImage.setImageResource(R.drawable.pictures_no);
         holder.mIvImage.setColorFilter(null);
         final String filePath = mFilePath + "/" + mDatas.get(position);
-        ImageLoader.getInstance(3, ImageLoader.Type.FILO).loadImage(filePath, holder.mIvImage);
+        ImageLoader.getInstance().loadImage(filePath, holder.mIvImage);
 
+
+        if (mSelectedDatas.contains(filePath)) {
+            holder.mIbCheck.setImageResource(R.drawable.icon_checked);
+            holder.mIvImage.setColorFilter(Color.parseColor("#44000000"));
+        } else {
+            holder.mIbCheck.setImageResource(R.drawable.icon_pic_check);
+            holder.mIvImage.setColorFilter(null);
+        }
 
         holder.mIvImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSelectedDatas.contains(filePath)) {
-                    holder.mIbCheck.setImageResource(R.drawable.picture_unselected);
-                    mSelectedDatas.remove(filePath);
-                    holder.mIvImage.setColorFilter(null);
-                } else {
-                    holder.mIbCheck.setImageResource(R.drawable.pictures_selected);
-                    holder.mIvImage.setColorFilter(Color.parseColor("#44000000"));
-                    mSelectedDatas.add(filePath);
+
+                if (onMyImageItemClickListener != null) {
+                    onMyImageItemClickListener.click(filePath);
                 }
             }
         });
+
+        holder.mIbCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSelectedDatas.contains(filePath)) {
+                    holder.mIbCheck.setImageResource(R.drawable.icon_pic_check);
+                    mSelectedDatas.remove(filePath);
+                    holder.mIvImage.setColorFilter(null);
+                } else {
+                    //判断当前选中的数量是否超过了mMaxSelectImgs值
+                    if (mSelectedDatas.size() >= mMaxSelectImgs) {
+                        Toast.makeText(mContext, "所选中图片不能超过" + mMaxSelectImgs + "张", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    holder.mIbCheck.setImageResource(R.drawable.icon_checked);
+                    holder.mIvImage.setColorFilter(Color.parseColor("#44000000"));
+                    mSelectedDatas.add(filePath);
+                }
+                if (onMyCheckItemClickListener != null) {
+                    onMyCheckItemClickListener.click(mSelectedDatas);
+                }
+            }
+        });
+    }
+
+    public interface OnMyCheckItemClickListener {
+        void click(List<String> mSelectedDatas);
+    }
+
+    public void setOnMyCheckItemClickListener(OnMyCheckItemClickListener listener) {
+        this.onMyCheckItemClickListener = listener;
+    }
+
+    public interface OnMyImageItemClickListener {
+        void click(String filePath);
+    }
+
+    public void setOnMyImageItemClickListener(OnMyImageItemClickListener listener) {
+        this.onMyImageItemClickListener = listener;
     }
 
     @Override
