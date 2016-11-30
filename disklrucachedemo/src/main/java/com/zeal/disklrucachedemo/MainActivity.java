@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         disk_cache = (Button) findViewById(R.id.disk_cache);
         disk_image = (ImageView) findViewById(R.id.id_image);
         disk_read = (Button) findViewById(R.id.disk_read);
-        id_text = (T) findViewById(R.id.id_text);
+        id_text = (TextView) findViewById(R.id.id_text);
 
 
         //获取文件缓存的路径
