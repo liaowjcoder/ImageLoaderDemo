@@ -252,6 +252,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 检测当前的filepath是否可以转化为一个bitmap
+     * 不是以.png,.jpeg等结尾的就是可以转化为bitmap，有一些字节是为0的就是不可以的
+     * 需要将这些进行过滤掉。
+     *
+     * @param filePath
+     *
+     * @return
+     */
     private boolean checkFileAviable(String filePath) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -266,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 得到该文件夹下有多少符合条件的文件
      *
      * @param parentFile 需要检测
+     *
      * @return
      */
     private int getFileCounts(File parentFile) {
