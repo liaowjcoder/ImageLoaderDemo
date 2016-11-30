@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = "zeal";
     private DiskLruCache mDiskLruCache;
     private Button disk_read;
+    private TextView id_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         disk_cache = (Button) findViewById(R.id.disk_cache);
         disk_image = (ImageView) findViewById(R.id.id_image);
         disk_read = (Button) findViewById(R.id.disk_read);
+        id_text = (T) findViewById(R.id.id_text);
 
 
         //获取文件缓存的路径
@@ -107,6 +110,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void totalSize(View view) {
+        id_text.setText(mDiskLruCache.size() / 1024 + "kb");
+    }
+
+    /**
+     * 移除指定key的缓存
+     *
+     * @param view
+     */
     public void remove(View view) {
         try {
             String url = "http://img.my.csdn.net/uploads/201309/01/1378037235_7476.jpg";
